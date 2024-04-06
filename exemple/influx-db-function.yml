@@ -1,0 +1,14 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+functions:
+  influx-db-function:
+    lang: golang-middleware
+    handler: ./influx-db-function
+    image: vcherel/influx-db-function:latest
+    annotations:
+      topic: topic1
+    environment:
+      INFLUXDB_URL: http://10.42.0.1:8086
+      INFLUXDB_TOKEN: PphN1UopXSc92TYt7XI3E0ra1NQ5OS0IGRNEEKrSq4UF4JNn2fpyWFpgBQiYGo70Q3Lp8Xo1pbZAdCgwNrRVNQ==
