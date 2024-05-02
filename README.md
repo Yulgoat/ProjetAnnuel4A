@@ -6,10 +6,12 @@
  ## 1.  Installations : 
 
 - Installer QEMU (Virtualiseur de machine) :
-`sudo apt-get update && sudo apt install qemu`
+
+   sudo apt-get update && sudo apt install qemu
 
 - Installer Virtual Manager (Interface graphique pour QEMU) :
-`sudo apt install virt-manager`
+
+   sudo apt install virt-manager
 
 - Redémarrer la machine.
 
@@ -50,11 +52,11 @@ Valider puis suivre la suite des étapes d’installation dans la VM (il faut to
 
  ## 3. Se connecter en SSH à la VM :
     
-Dans la VM, regarder quelle est l’adresse IP de la VM (192. …) :
+- Dans la VM, regarder quelle est l’adresse IP de la VM (192. …) :
 
-     hostname -I
+   hostname -I
 
-Faire cette commande sur son pc :
+- Faire cette commande sur son pc :
 
     ssh -p 22 -L 8082:localhost:8082 -L 8081:localhost:8080 -L 8086:localhost:8086 user@<Adresse IP VM>
 (`ssh -p 22 user@<Adresse IP VM>` est suffisant, mais **-L \<portHôte\>:localhost:\<portVM\>** permet de lier le port de l'hôte au port de la VM (utile pour les futures applications que l’on va utiliser)
