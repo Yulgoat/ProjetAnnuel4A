@@ -5,15 +5,15 @@
 
  ## 1.  Installations : 
 
-- Installer QEMU (Virtualiseur de machine) :
-
-   sudo apt-get update && sudo apt install qemu
-
-- Installer Virtual Manager (Interface graphique pour QEMU) :
-
-   sudo apt install virt-manager
-
-- Redémarrer la machine.
+Installer QEMU (Virtualiseur de machine) :
+```sh 
+sudo apt-get update && sudo apt install qemu
+```
+Installer Virtual Manager (Interface graphique pour QEMU) :
+```sh 
+sudo apt install virt-manager
+```
+Redémarrer la machine.
 
 ## 2. Créer une VM :
 Pour émuler le cluster, il faut créer une VM principale (main), et potentiellement plusieurs VMs qui agiront comme des agents.
@@ -52,76 +52,95 @@ Valider puis suivre la suite des étapes d’installation dans la VM (il faut to
 
  ## 3. Se connecter en SSH à la VM :
     
-- Dans la VM, regarder quelle est l’adresse IP de la VM (192. …) :
+Dans la VM, regarder quelle est l’adresse IP de la VM (192. …) :
+```sh 
+hostname -I 
+```
 
-   hostname -I
+Faire cette commande sur son pc :
+```sh 
+ssh -p 22 -L 8082:localhost:8082 -L 8081:localhost:8080 -L 8086:localhost:8086 user@<Adresse IP VM>
+```
 
-- Faire cette commande sur son pc :
-
-    ssh -p 22 -L 8082:localhost:8082 -L 8081:localhost:8080 -L 8086:localhost:8086 user@<Adresse IP VM>
 (`ssh -p 22 user@<Adresse IP VM>` est suffisant, mais **-L \<portHôte\>:localhost:\<portVM\>** permet de lier le port de l'hôte au port de la VM (utile pour les futures applications que l’on va utiliser)
-
 # II. Guide Kubernetes (K3S)
 **Ce guide explique comment installer K3S sur les différentes VM pour leur permettre de communiquer et d’agir comme un cluster.**
 
  ## 1. Installation de K3S sur la main :
- - Téléchargement et installation de K3S :
-`sudo apt install curl`
-`sudo curl -sfL https://get.k3s.io | sh -`
-
-- Obtention du token du main, nécessaire pour l’installation des agents (donc à sauvegarder dans un coin) :
-    `sudo cat /var/lib/rancher/k3s/server/node-token`
-
-- Vérifier que K3S est bien lancé :
- `sudo systemctl status k3s`
-
-- Vérifier l’état des noeuds :
-`sudo kubectl get nodes`
-
+Téléchargement et installation de K3S :
+```sh 
+sudo apt install curl
+sudo curl -sfL https://get.k3s.io | sh -
+```
+Obtention du token du main, nécessaire pour l’installation des agents (donc à sauvegarder dans un coin) :
+```sh 
+sudo cat /var/lib/rancher/k3s/server/node-token`
+```
+Vérifier que K3S est bien lancé :
+```sh 
+sudo systemctl status k3s
+```
+Vérifier l’état des noeuds :
+```sh 
+sudo kubectl get nodes
+```
 ## 2. Installation de K3S sur les agents :
-    
-`sudo curl -sfL https://get.k3s.io | K3S_URL=https://<IP du main>:6443 K3S_TOKEN=<Token du main> sh -s - --with-node-id <Nom unique de l’agent>`
 
-- Vérifier que K3S est bien lancé :
-`sudo systemctl status k3s-agent`
-
-- Pour regarder si l’agent est bien connecté, se connecter sur le main et lancer cette commande :
-`sudo kubectl get nodes`
-
+```sh 
+sudo curl -sfL https://get.k3s.io | K3S_URL=https://<IP du main>:6443 K3S_TOKEN=<Token du main> sh -s - --with-node-id <Nom unique de l’agent>
+```
+Vérifier que K3S est bien lancé :
+```sh 
+sudo systemctl status k3s-agent
+```
+Pour regarder si l’agent est bien connecté, se connecter sur le main et lancer cette commande :
+```sh 
+sudo kubectl get nodes
+```
 ## 3. Commandes optionnelles :
 Si l’agent n’arrive pas à se connecter, ces commandes peuvent être utiles.
 
-- Enlever les pares-feu :
-`sudo apt-get install ufw`
-`sudo ufw disable`
-
-- Ouvrir le port 6443 :
-` sudo iptables -A INPUT -p tcp --port 6443 -j ACCEPT`
-
+Enlever les pares-feu :
+```sh 
+sudo apt-get install ufw
+sudo ufw disable
+```
+Ouvrir le port 6443 :
+```sh 
+sudo iptables -A INPUT -p tcp --port 6443 -j ACCEPT
+```
 # III. Guide Docker
 **Ce guide permet d’installer Docker et de le rendre utilisable.**
 
 ## 1. Installation de Docker :
-- Installer snap :
-`sudo apt install snapd`
+Installer snap :
 
-- Éteindre la VM et la relancer.
+```sh 
+sudo apt install snapd
+```
+Éteindre la VM et la relancer.
 
-- Installer la bonne version de Docker :
-`sudo snap install --channel=core18 docker`
-
-- Se donner les permissions pour utiliser docker :
-` sudo groupadd docker`
-`sudo usermod -aG docker \<user\>`
-
-- Éteindre la VM et la relancer.
+Installer la bonne version de Docker :
+```sh 
+sudo snap install --channel=core18 docker
+```
+Se donner les permissions pour utiliser docker :
+```sh 
+sudo groupadd docker
+sudo usermod -aG docker \<user\>
+```
+Éteindre la VM et la relancer.
 
  ## 2. Commandes utiles :
-- Donne la liste des images Docker :
-`docker images`
-
-- Supprimer les conteneurs arrêtés :
-`docker system prune --all`
-
-- Supprimer une image docker :
-`docker rmi <id de l’image>`
+Donne la liste des images Docker :
+```sh 
+docker images
+```
+Supprimer les conteneurs arrêtés :
+```sh 
+docker system prune --all
+```
+Supprimer une image docker :
+```sh 
+docker rmi <id de l’image>
+```
