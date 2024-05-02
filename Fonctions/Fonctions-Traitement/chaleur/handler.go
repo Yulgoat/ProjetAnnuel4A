@@ -6,6 +6,9 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"os"
+	"strconv"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -19,32 +22,119 @@ func Humidex(temperature, humidity float64) float64 {
 	return temperature + (5.0/9.0)*(e-10.0)
 }
 
+// Fonction pour envoyer un message MQTT à notification
+func SendMQTT(messageJSON []byte, topic string) {
+	// Envoyer le message JSON via MQTT
+	mqttOpts := mqtt.NewClientOptions()
+	mqttOpts.AddBroker("tcp://192.168.122.61:1883")
+	mqttOpts.SetClientID("fonction_chaleur")
+
+	// Création du client MQTT
+	mqttClient := mqtt.NewClient(mqttOpts)
+	if mqttToken := mqttClient.Connect(); mqttToken.Wait() && mqttToken.Error() != nil {
+		log.Fatal(mqttToken.Error())
+	}
+
+	// Publication du message sur le topic
+	mqttToken := mqttClient.Publish(topic, 0, false, string(messageJSON))
+	mqttToken.Wait()
+
+	fmt.Printf("Message publié sur le topic %s: %s\n", topic, messageJSON)
+
+	time.Sleep(2 * time.Second)
+	// Déconnexion du client MQTT
+	mqttClient.Disconnect(250)
+}
+
 // Fonction pour determiner la sensation provoquée en fonction de l'humidex
 func HumidexSensation(humidex float64) string {
+	moreDataStr := os.Getenv("MORE_DATA")
+	moreData, err := strconv.ParseBool(moreDataStr)
+	if err != nil {
+		panic(err)
+	}
 	switch {
 	case humidex < 15:
+		if moreData {
+			changeSensorPeriode()
+		}
 		return "Sensation de frais ou de froid"
 	case humidex >= 15 && humidex < 29:
+		if moreData {
+			changeSensorPeriode()
+		}
 		return "Sensation de confort"
 	case humidex >= 29 && humidex < 34:
+		if moreData {
+			changeSensorPeriode()
+		}
 		return "Chaleur : sensation d'inconfort"
 	case humidex >= 34 && humidex < 39:
+		if !moreData {
+			changeSensorPeriode()
+		}
 		return "Chaleur : sensation d'inconfort important"
 	case humidex >= 39 && humidex < 45:
+		if !moreData {
+			changeSensorPeriode()
+		}
 		return "Forte Chaleur : Danger"
 	case humidex >= 45 && humidex < 53:
+		if !moreData {
+			changeSensorPeriode()
+		}
 		return "Très forte chaleur : Danger extrême"
 	case humidex > 54:
+		if !moreData {
+			changeSensorPeriode()
+		}
 		return "Coup de chaleur imminent (danger de mort)"
 	}
 	return "Erreur HumidexSensation"
 }
 
+// Fonction pour changer la période du capteur EM300 afin de faire plus ou moins de donner en fonction du cas (voir fonction humidex pour les cas)
+func changeSensorPeriode() {
+	moreDataStr := os.Getenv("MORE_DATA")
+	moreData, err := strconv.ParseBool(moreDataStr)
+	moreData = !moreData
+	os.Setenv("MORE_DATA", strconv.FormatBool(moreData))
+
+	var periode int
+	if moreData {
+		periode = 120
+	} else {
+		periode = 900
+	}
+
+	// Créer une structure de ChangePeriode
+	changeP := ChangePeriode{
+		Periode: periode,
+	}
+
+	// Convertir le ChangePeriode en JSON
+	changePeriodeJSON, err := json.Marshal(changeP)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//Envoyer le JSON
+	topic2 := "EM300TH-changePeriode"
+	SendMQTT(changePeriodeJSON, topic2)
+}
+
+// Json que l'on reçoit en début
 type Reception struct {
 	Temperature float64 `json:"temperature"`
 	Humidity    float64 `json:"humidity"`
 }
 
+// Json pour changer la période
+type ChangePeriode struct {
+	Periode int `json:"periode"`
+}
+
+// Json que l'on envoie au topic notification
 type Notification struct {
 	Temperature float64 `json:"temperature"`
 	Humidity    float64 `json:"humidity"`
@@ -82,30 +172,14 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Convertir la notification en JSON
-	messageJSON, err := json.Marshal(notification)
+	notificationJSON, err := json.Marshal(notification)
 	if err != nil {
 		http.Error(w, "Failed to encode notification to JSON", http.StatusInternalServerError)
 		return
 	}
 
-	// Envoyer le message JSON via MQTT
-	mqttOpts := mqtt.NewClientOptions()
-	mqttOpts.AddBroker("tcp://192.168.122.61:1883")
-	mqttOpts.SetClientID("fonction_chaleur")
+	//Envoyer le JSON
+	topic1 := "notification"
+	SendMQTT(notificationJSON, topic1)
 
-	// Création du client MQTT
-	mqttClient := mqtt.NewClient(mqttOpts)
-	if mqttToken := mqttClient.Connect(); mqttToken.Wait() && mqttToken.Error() != nil {
-		log.Fatal(mqttToken.Error())
-	}
-
-	// Publication du message sur le topic
-	topic := "notification"
-	mqttToken := mqttClient.Publish(topic, 0, false, string(messageJSON))
-	mqttToken.Wait()
-
-	fmt.Printf("Message publié sur le topic %s: %s\n", topic, messageJSON)
-
-	// Déconnexion du client MQTT
-	mqttClient.Disconnect(250)
 }

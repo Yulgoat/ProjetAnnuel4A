@@ -1,4 +1,2 @@
-Liste des fonctions dans le dossier Exemples :
-hello-function : Abonné au topic1, print "Hello world!" dans les logs
-mqtt-function : Publie sur le topic1
-influx-db-fonction : Abonné au topic1, met des données aléatoires dans une base de donnée Influx
+# GUIDE PROJET MYCÉLIUM
+![](https://lh7-us.googleusercontent.com/LRDQu3z4KFLsC_jDBDLNSd-HGQXYu8vzk9OZ9kp4AS5crYtpVo3KnwkXeMf1pCfibq7vwgwuK0bm1NXSBHlvac5GLYh30Br9X21tTeUCMQRZi4qBE0RPnoagNe8sehpeGnmCF9_p38g6v1_l6dc9FD8)

@@ -9,4 +9,5 @@ functions:
     image: myceliumir/chaleur:latest
     annotations:
       topic: fonction_chaleur
-
+    environment:
+      MORE_DATA: false

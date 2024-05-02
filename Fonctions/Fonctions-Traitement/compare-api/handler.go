@@ -15,6 +15,11 @@ type Reception struct {
 	Humidity    float64 `json:"humidity"`
 }
 
+type MeteoFranceResponse struct {
+	Temperature float64 `json:"t"`
+	Humidite    float64 `json:"u"`
+}
+
 type Notification struct {
 	Coherence string `json:"sensation"`
 }
@@ -52,7 +57,7 @@ func getAPI() (float64, float64) {
 
 	/* Le token est censé durée 999 999 999 secondes. Si il périme, aller sur https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesObservation
 	puis configurer API (il faudra créer un compte) et regénérer un token */
-	token := "eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwaWVyb3V2ckBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6InBpZXJvdXZyIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTExODIsInV1aWQiOiJiOTk0NGEyOC1kZDI1LTRiODYtODU1Ny0xNTQ5ZTM2ODAyZDkifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjUwUGVyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc0NsaW1hdG9sb2dpZSIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBDbGltXC92MSIsInB1Ymxpc2hlciI6ImFkbWluX21mIiwidmVyc2lvbiI6InYxIiwic3Vic2NyaXB0aW9uVGllciI6IjUwUGVyTWluIn0seyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6IkRvbm5lZXNQdWJsaXF1ZXNPYnNlcnZhdGlvbiIsImNvbnRleHQiOiJcL3B1YmxpY1wvRFBPYnNcL3YxIiwicHVibGlzaGVyIjoiYmFzdGllbmciLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNTBQZXJNaW4ifV0sInRva2VuX3R5cGUiOiJhcGlLZXkiLCJpYXQiOjE3MTEzODIyMTQsImp0aSI6Ijg2MTgwMTUzLTI0NjItNGY4My05Njg0LTRlOTQ0OWNjOWM0OCJ9.kY-OYtAHjN59iOtmjUGwXLgyNdt5HLs-R-YBFgO1p8LOkNlY75UZEP5fjE4S1VW0d_FzLCqOEr4sR-7RSB_6vfvKTaBsW7GrIUtYpBod9iYF3ESlKB4UoM6wdhAN17vTP1A_v7ZJjbPy9rDlqJbZwoobRCipfw804daN_emV63HbsYOma0SCFcLjZiTSa8z658MdQfookNcTiRb3ydWwo8rrmqI6T3IyERnz5t-wwjfXDJuKTwPiWhSaPBJB-42kPJjd1eAgO_Lv6vd6S5sGZltcdThGZwF3x6epOE27Z3Cb-Ujdndn-q4kpjVPBVcn0xXfdt4yNzmilwT4cb_ERYw==" // Remplacez "votre_token" par votre vrai token
+	token := "eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwaWVyb3V2ckBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6InBpZXJvdXZyIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MTExODIsInV1aWQiOiJiOTk0NGEyOC1kZDI1LTRiODYtODU1Ny0xNTQ5ZTM2ODAyZDkifSwiaXNzIjoiaHR0cHM6XC9cL3BvcnRhaWwtYXBpLm1ldGVvZnJhbmNlLmZyOjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IjUwUGVyTWluIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiRG9ubmVlc1B1YmxpcXVlc09ic2VydmF0aW9uIiwiY29udGV4dCI6IlwvcHVibGljXC9EUE9ic1wvdjEiLCJwdWJsaXNoZXIiOiJiYXN0aWVuZyIsInZlcnNpb24iOiJ2MSIsInN1YnNjcmlwdGlvblRpZXIiOiI1MFBlck1pbiJ9LHsic3Vic2NyaWJlclRlbmFudERvbWFpbiI6ImNhcmJvbi5zdXBlciIsIm5hbWUiOiJEb25uZWVzUHVibGlxdWVzQ2xpbWF0b2xvZ2llIiwiY29udGV4dCI6IlwvcHVibGljXC9EUENsaW1cL3YxIiwicHVibGlzaGVyIjoiYWRtaW5fbWYiLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiNTBQZXJNaW4ifV0sInRva2VuX3R5cGUiOiJhcGlLZXkiLCJpYXQiOjE3MTMxOTY3NDEsImp0aSI6IjJkNGE5MmJjLTkxMGQtNDU1Yy1iOTJkLTIyMjgyOTZkYTljNCJ9.MHWe_-0WH9IUKw-i9MncgRcI9CWUwvREhaqdZGb0aBLZ8tjjZx1LGoWMVlP1bP-sAVXZTzpF1BRXQGgml3nU0k0iCUpYhIEO_vhAO6He27K-30vnNDRRr7CR2AJXsNMEkhkgJmDSEGbz4SSuJUJzMXZ2eq7zQX58qyE7LCcqzjVUUUgWfp2CW-7TkWAYvM6Sjvr_-GBY4kP85xYLrIgHMovhVf1ASCGlKeV7-h1b_e2h_2L00EnTB2CEOWVV3bjLATaSN4z-i6HsrK4C5-Lc0kJWZfJGSfLwD-GtlgpGVTNF2cg2wchDEEtxhXfHjTtYlacf1CoPE_kblgKXzxXBBA==" // Remplacez "votre_token" par votre vrai token
 
 	// Créer une nouvelle requête HTTP GET
 	req, err := http.NewRequest("GET", url, nil)
@@ -88,7 +93,7 @@ func getAPI() (float64, float64) {
 	}
 
 	// Décoder le JSON de la réponse
-	var response []Reception
+	var response []MeteoFranceResponse
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		fmt.Println("Erreur lors du décodage du JSON de la réponse:", err)
@@ -103,12 +108,15 @@ func getAPI() (float64, float64) {
 
 	temperatureCelsius := response[0].Temperature - 273.15
 
-	return temperatureCelsius, response[0].Humidity
+	fmt.Printf("Température: %.2f°C\n", temperatureCelsius)
+	fmt.Printf("Humidité: %.2f%%\n", response[0].Humidite)
+
+	return temperatureCelsius, response[0].Humidite
 
 }
 
 func ComparerCapteurAPI(tempCap float64, humCap float64, tempApi float64, humApi float64) bool {
-	if tempApi-2 < tempCap && tempCap < tempApi+2 && humApi-2 < humCap && humCap < humApi+2 {
+	if tempApi-5 < tempCap && tempCap < tempApi+5 && humApi-20 < humCap && humCap < humApi+20 {
 		return true
 	} else {
 		return false
