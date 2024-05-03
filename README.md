@@ -560,6 +560,40 @@ ifconfig
 
 ⚠️ Dans Influx DB, il faut créer le bucket utilisé dans la fonction, en utilisant le même nom.
 
+# Guide Grafana
+Lien d'où le tuto est tiré: https://docs.influxdata.com/influxdb/v2/tools/grafana/ 
+
+## Installation
+
+- Suivre le guide pour installer InfluxDB
+
+- Installer Grafana
+```sh
+sudo apt-get install -y adduser libfontconfig1 musl
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_10.4.2_amd64.deb
+sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
+sudo /bin/systemctl start grafana-server
+```
+
+## Faire le lien entre Influx et Grafana
+
+- Aller sur l'UI, de base Grafana est sur le port 3000
+
+- Dans le menu de gauche, cliquer sur connection > Add new conenction > influxdb > Add new data source
+
+- Choissiser un nom, et prenez Flux comme Query language
+
+- Dans HTTP mettez l'adresse de la base Influx (http://localhost:8086/ si c'est sur le même support)
+
+- Dans InfluxDB Details, remplissez Organisation, le bucket par default, le token, l'interval minimum (10 par default) et nombre maximal de données (1000 par default)
+
+## Mettre en forme
+**Il ne vous reste qu'à mettre en forme les données.**
+
+Pour cela :
+- Ajouter un (ou plusieurs) pannel(s)
+- Faites une query en flux (une fois la courbe voulue affichée dans influx, cliquer sur **ScriptEditor**. Ensuite copier la requête flux en mettant "range(start: -7d)") 
+
 
 # Guide ChirpStack
 
@@ -571,7 +605,7 @@ Changer la ligne dans Setup software repository.
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 1CE2AFD36DBCCA00
 ```
 
-## Configurer Chirpstack gateway bridge :
+## Configurer Chirpstack gateway bridge 
 
 ```sh
 sudo chmod go+rwx -R /etc/chirpstack-gateway-bridge/
