@@ -67,7 +67,7 @@ Faire cette commande sur son pc :
 ssh -p 22 -L 8082:localhost:8082 -L 8081:localhost:8080 -L 8086:localhost:8086 user@<Adresse IP VM>
 ```
 
-(`ssh -p 22 user@<Adresse IP VM>` est suffisant, mais **-L \<portHôte\>:localhost:\<portVM\>** permet de lier le port de l'hôte au port de la VM (utile pour les futures applications que l'on va utiliser)
+(`ssh -p 22 user@<Adresse IP VM>` est suffisant, mais **-L \<portHôte\>:localhost:\<portVM\>** permet de lier le port de l'hôte au port de la VM. Ainsi on accède au port de la VM avec localhost:port. Sinon, dans un navigateur IPVM:port et ça marche aussi.
 
 # Guide Kubernetes (K3S)
 
@@ -360,12 +360,18 @@ faas-cli invoke -f test-function.yml test-function
 | Teste la fonction | `go test <nom-fonction>`  |
 | Pour ajouter une librairies externe : | `go get <nom-librairie>` |
 
+## Lancer une fonction à intervalle ou horaire régulier
+
+Suivre les instructions de ce lien (https://www.openfaas.com/blog/schedule-your-functions/) à partir de "Deploy the cron-connector" jusqu'à "How to schedule".
+
+Ensuite dans "Configure the function", il y aura juste la partit "annotations" du yaml qui nous interessera.
+
 ## Exemples de fonctions :
 
 [Des exemple peuvent être trouvés ici.](https://gitlab.insa-rennes.fr/mycelium-3.0/mycelium-3.0)
 
 # Guide MQTT
-**Ce guide permet de créer un serveur MQTT et de le faire fonctionner.**
+**Ce guide permet de créer un serveur MQTT et de trigger des fonctions openfaas lorsque qu'il y a un message sur un topic précis.**
 
 ## Création du serveur MQTT :
 
@@ -827,8 +833,9 @@ Aller sur [le vpn de l'INSA Rennes](https://vpn.insa-rennes.fr/gate/cloud/).
 
 Installer GateClient s’il n’est pas installé. La connexion se fait avec les identifiants INSA.
 
-pull le server RSS si il n’est pas présent : docker pull thomasderrien/rss-app
-lancer le server RSS : docker run -p 80:80 rss-app 
+Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
+
+Lancer le server RSS : `docker run -p 80:80 rss-app`
 
 # Guide Git avec SSH
 
@@ -853,7 +860,7 @@ git config --global user.email <adresse mail>
 ssh -p 22 user@<Adresse IP VM>
 ```
 
-On peut aussi se connecter tout en redirigeant les ports pour pouvoir ouvrir les interfaces web directement depuis le pc hôte :
+On peut aussi se connecter tout en redirigeant les ports pour pouvoir ouvrir les interfaces web directement depuis le pc hôte (sinon IPVM:port dans un navigateur):
 ```sh
 ssh -p 22 -L 8082:localhost:8082 -L 8081:localhost:8080 -L 8086:localhost:8086  user@<Adresse IP VM>
 ```
