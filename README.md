@@ -883,7 +883,7 @@ Aller sur [le vpn de l'INSA Rennes](https://vpn.insa-rennes.fr/gate/cloud/).
 Installer GateClient s’il n’est pas installé. La connexion se fait avec les identifiants INSA.
 
 
-## Utile sur le VPS 
+## Utile sur le VPS 
 
 - Pour beaucoup de commande, il faudra faire `sudo bash -c "<commande>"` car il y a des soucis de droits avec toutes les règles de sécurités
 
@@ -917,7 +917,7 @@ Lancer le server RSS : `docker run -p 80:80 rss-app`
 - Organisation : MyceliumVPS
 
 
-## Grafana VPS
+## Grafana VPS
 
 - User : admin
 
