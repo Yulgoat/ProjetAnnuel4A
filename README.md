@@ -869,6 +869,13 @@ Naviguer entre les machines avec ssh nikos@nikosX, se déconnecter après chaque
 
 Installer les librairies précisées dans la rubrique Chirpstack si besoin pour chaque raspberry.
 
+## Internet sur le VPS
+Pour mettre internet sur le vps, il faut : 
+
+- dans /home/nikos se trouve un fichier python "installer_eduroam.py". Executer le et mettez vos identifiants insa. Aisni le cluster sera sur insaWiFi.
+
+- Pour insa IOT, voir avec Nikos, mais le cluster n'est plus connecté dessus (utiliser iwconfig après avoir obtenur le mot de passe)
+
 # Guide VPS
 
 Aller sur [le vpn de l'INSA Rennes](https://vpn.insa-rennes.fr/gate/cloud/).
