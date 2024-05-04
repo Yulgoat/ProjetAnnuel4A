@@ -882,6 +882,7 @@ Aller sur [le vpn de l'INSA Rennes](https://vpn.insa-rennes.fr/gate/cloud/).
 
 Installer GateClient s’il n’est pas installé. La connexion se fait avec les identifiants INSA.
 
+
 ## Utile sur le VPS 
 
 - Pour beaucoup de commande, il faudra faire `sudo bash -c "<commande>"` car il y a des soucis de droits avec toutes les règles de sécurités
@@ -909,17 +910,18 @@ Lancer le server RSS : `docker run -p 80:80 rss-app`
 - Penser à faire le `kubectl port-forward -n openfaas svc/gateway 8080:8080 &` pour créer des fonctions / mqtt-connector
 
 ## InfluxDB VPS
-User : Mycelium
+- User : Mycelium
 
-Mdp : MyceliumIR
+- Mdp : MyceliumIR
 
-Organisation : MyceliumVPS
+- Organisation : MyceliumVPS
+
 
 ## Grafana VPS
 
-User : admin
+- User : admin
 
-Mdp : Mycelium
+- Mdp : Mycelium
 
 # Guide Git avec SSH
 
