@@ -869,7 +869,7 @@ Naviguer entre les machines avec ssh nikos@nikosX, se déconnecter après chaque
 
 Installer les librairies précisées dans la rubrique Chirpstack si besoin pour chaque raspberry.
 
-## Internet sur le VPS
+## Internet sur le Cluster
 Pour mettre internet sur le vps, il faut : 
 
 - dans /home/nikos se trouve un fichier python "installer_eduroam.py". Executer le et mettez vos identifiants insa. Aisni le cluster sera sur insaWiFi.
@@ -905,15 +905,20 @@ Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-a
 Lancer le server RSS : `docker run -p 80:80 rss-app`
 
 ## Openfaas & VPS 
+
 - Penser à faire le `kubectl port-forward -n openfaas svc/gateway 8080:8080 &` pour créer des fonctions / mqtt-connector
 
 ## InfluxDB VPS
 User : Mycelium
+
 Mdp : MyceliumIR
+
 Organisation : MyceliumVPS
 
 ## Grafana VPS
+
 User : admin
+
 Mdp : Mycelium
 
 # Guide Git avec SSH
