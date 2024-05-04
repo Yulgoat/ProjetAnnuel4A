@@ -575,6 +575,14 @@ sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
 sudo /bin/systemctl start grafana-server
 ```
 
+- Lancer grafana (à chaque démarage) avec 
+```sh
+sudo /bin/systemctl start grafana-server
+```
+
+User : admin
+Mdp : Mycelium
+
 ## Faire le lien entre Influx et Grafana
 
 - Aller sur l'UI, de base Grafana est sur le port 3000
@@ -867,6 +875,22 @@ Aller sur [le vpn de l'INSA Rennes](https://vpn.insa-rennes.fr/gate/cloud/).
 
 Installer GateClient s’il n’est pas installé. La connexion se fait avec les identifiants INSA.
 
+## Utile sur le VPS 
+
+- Pour beaucoup de commande, il faudra faire `sudo bash -c "<commande>"` car il y a des soucis de droits avec toutes les règles de sécurités
+
+- Pour ajouter une règle sur le par-feu (la DSI ouvre les ports sur leur réseau, mais nous on doit ouvrir sur le VPS aussi) : 
+```sh
+sudo nano /etc/firewall.conf
+sudo iptables-restore < /etc/firewall.conf
+```
+
+- Rediriger des ports (quand il y a en a un que la DSI a pas encore ouvert) :
+```sh
+sudo iptables -t nat -A PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 3000   // Ici le port 1883 enverra vers le port 3000
+sudo iptables -t nat -D PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 3000
+```
+
 ## Server RSS
 
 Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
@@ -876,12 +900,14 @@ Lancer le server RSS : `docker run -p 80:80 rss-app`
 ## Openfaas & VPS 
 - Penser à faire le `kubectl port-forward -n openfaas svc/gateway 8080:8080 &` pour créer des fonctions / mqtt-connector
 
-- Pour beaucoup de commande, il faudra faire `sudo bash -c "<commande>"` car il y a des soucis de droits avec toutes les règles de sécurités
-
 ## InfluxDB VPS
 User : Mycelium
 Mdp : MyceliumIR
 Organisation : MyceliumVPS
+
+## Grafana VPS
+User : admin
+Mdp : Mycelium
 
 # Guide Git avec SSH
 
