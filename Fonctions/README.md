@@ -17,3 +17,7 @@
 	- Fonctions Go ou Python
 	- Ce ne sont pas des fonctions Openfaas, elle se lance à la main
 	- Sont là pour l'exemple et pour tester sans avoir à modifier sans cesse des fonctions openfaas	
+
+## Fonctions-VPS 
+	- Fonctions Go
+	- Fonctions OpenFaas qui tourne sur le VPS
