@@ -1,6 +1,6 @@
 # GUIDE MYCÉLIUM
 
-![](https://lh7-us.googleusercontent.com/LRDQu3z4KFLsC_jDBDLNSd-HGQXYu8vzk9OZ9kp4AS5crYtpVo3KnwkXeMf1pCfibq7vwgwuK0bm1NXSBHlvac5GLYh30Br9X21tTeUCMQRZi4qBE0RPnoagNe8sehpeGnmCF9_p38g6v1_l6dc9FD8)
+![](./images/Schéma final.png)
 
 **Table of Contents**
 
@@ -32,7 +32,7 @@ Ouvrir Virtual Manager et suivre ces instructions :
 
 -   Sélectionner QEMU/KVM.
     
--   Cliquer sur  ![](https://lh7-us.googleusercontent.com/MFFR6zugulGFwakyZqtaAZfpUZ4IcQ9pU5raZsSm6FMv5qiPfKMD9kRq7UdV6D23yRGW8WkwOWUAvHL12_grRi0tL35ZG4xzQTjMZMfpDbUdhFWCBhhlru7V-MLlzHkJwNFP2hXgSrbZPJa8zreOk0I) pour créer une nouvelle machine.
+-   Cliquer sur  ![](./images/bouton_newvm.png) pour créer une nouvelle machine.
     
 -   Sélectionner Média d’installation local (ISO).
     
