@@ -1,6 +1,6 @@
 # GUIDE MYCÉLIUM
 
-![](./images/Schéma final.png)
+![](./images/schema.png)
 
 **Table of Contents**
 
