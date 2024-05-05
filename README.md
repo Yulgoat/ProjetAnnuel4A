@@ -601,6 +601,16 @@ Mdp : Mycelium
 Pour cela :
 - Ajouter un (ou plusieurs) pannel(s)
 - Faites une query en flux (une fois la courbe voulue affichée dans influx, cliquer sur **ScriptEditor**. Ensuite copier la requête flux en mettant "range(start: -7d)") 
+```sh
+from(bucket: "Moyennes-VM")
+  |> range(start: -7d)
+  |> filter(fn: (r) => r["_measurement"] == "Data")
+  |> filter(fn: (r) => r["Capteurs"] == "Milesight-EM500-CO2")
+  |> filter(fn: (r) => r["_field"] == "pressure")
+  |> aggregateWindow(every: 1m, fn: last, createEmpty: false)
+  |> yield(name: "last")
+  
+```
 
 
 # Guide ChirpStack
@@ -901,9 +911,16 @@ sudo iptables -t nat -D PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 300
 
 ## Server RSS
 
-Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
+- Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
 
-Lancer le server RSS : `docker run -p 80:80 rss-app`
+- Lancer le server RSS : `docker run -p 80:80 rss-app` (si login docker pas celui de l'image, alors user/rss-app)
+--> À relancer à chaque fois que le serveur redemmare (verifier avec `docker ps` si l'image tourne)
+
+- Pour des exemples de POST, voir mycelium-3.0/Exemples Fonction OU dans Fonctions-VPS/notification-to-rss
+--> Les fonctions POST prennent en entrée un JSON du type {"title":"XXX","description":"YYY"}
+
+- Pour faire un "GET", aller sur http://10.133.33.52:8082/rss. Vous aurez alors tous le flux RSS en XML.
+
 
 ## Openfaas & VPS 
 

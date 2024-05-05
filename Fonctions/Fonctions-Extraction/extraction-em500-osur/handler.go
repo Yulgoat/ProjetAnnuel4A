@@ -25,11 +25,17 @@ type Message struct {
 	} `json:"object"`
 }
 
+// Json que l'on envoie au topic notification
+type Notification struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
 // Fonction pour envoyer un message MQTT à notification
-func SendMQTT(messageJSON []byte, topic string) {
+func SendMQTT(messageJSON []byte, topic string, url string) {
 	// Envoyer le message JSON via MQTT
 	mqttOpts := mqtt.NewClientOptions()
-	mqttOpts.AddBroker("tcp://192.168.122.61:1883")
+	mqttOpts.AddBroker(url)
 	mqttOpts.SetClientID("extraction-milesight-fct")
 
 	// Création du client MQTT
@@ -71,9 +77,6 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write temperature and humidity in the response
-	response := fmt.Sprintf("Temperature: %.1f°C, Humidity: %.1f%%, Pressure : %.1fhPa, CO2 : %.1fppm", msg.Object.Temperature, msg.Object.Humidity, msg.Object.Pressure, msg.Object.CO2)
-
 	//Write in the InfluxDB Database
 	org := "Mycelium"
 	bucket := "Mesure-Capteurs-OSUR"
@@ -96,18 +99,27 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Write temperature and humidity in the response
+	response := fmt.Sprintf("Temperature: %.1f°C, Humidity: %.1f%%, Pressure : %.1fhPa, CO2 : %.1fppm", msg.Object.Temperature, msg.Object.Humidity, msg.Object.Pressure, msg.Object.CO2)
 	fmt.Printf("Data: %s\n", response)
 
-	// Publication du message sur le topic
-	messageJSON, err := json.Marshal(msg.Object)
+	// Créer une structure de notification
+	title := "Données EM500-CO2 OSUR"
+	notification := Notification{
+		Title:       title,
+		Description: response,
+	}
+
+	// Convertir la notification en JSON
+	messageJSON, err := json.Marshal(notification)
 	if err != nil {
-		http.Error(w, "Failed to encode sensor data to JSON", http.StatusInternalServerError)
+		http.Error(w, "Failed to encode notification to JSON", http.StatusInternalServerError)
 		return
 	}
 
+	url1 := "tcp://10.133.33.52:1883"
 	topic1 := "notification"
-
-	SendMQTT(messageJSON, topic1)
+	SendMQTT(messageJSON, topic1, url1)
 
 	w.WriteHeader(http.StatusOK)
 	return

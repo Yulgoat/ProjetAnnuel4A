@@ -23,10 +23,10 @@ func Humidex(temperature, humidity float64) float64 {
 }
 
 // Fonction pour envoyer un message MQTT à notification
-func SendMQTT(messageJSON []byte, topic string) {
+func SendMQTT(messageJSON []byte, topic string, url string) {
 	// Envoyer le message JSON via MQTT
 	mqttOpts := mqtt.NewClientOptions()
-	mqttOpts.AddBroker("tcp://192.168.122.61:1883")
+	mqttOpts.AddBroker(url)
 	mqttOpts.SetClientID("fonction_chaleur")
 
 	// Création du client MQTT
@@ -119,8 +119,9 @@ func changeSensorPeriode() {
 	}
 
 	//Envoyer le JSON
+	url2 := "tcp://192.168.122.61:1883"
 	topic2 := "EM300TH-changePeriode"
-	SendMQTT(changePeriodeJSON, topic2)
+	SendMQTT(changePeriodeJSON, topic2, url2)
 }
 
 // Json que l'on reçoit en début
@@ -136,10 +137,8 @@ type ChangePeriode struct {
 
 // Json que l'on envoie au topic notification
 type Notification struct {
-	Temperature float64 `json:"temperature"`
-	Humidity    float64 `json:"humidity"`
-	Humidex     float64 `json:"humidex"`
-	Sensation   string  `json:"sensation"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
@@ -163,12 +162,13 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	//Resultat Envoyer Json a fonction notif
 	fmt.Printf("Pour une température de %.1f°C et une humidité de %.1f%%, l'humidex est %.1f.\nSensation : %s\n", temperature, humidity, humidex, sensation)
 
+	title := "humidex"
+	msg := fmt.Sprintf("Temperature : %1.f°C  ,Humidité : %1.f%%  ,Humidex : %1.f , Sensation :  %s", temperature, humidity, humidex, sensation)
+
 	// Créer une structure de notification
 	notification := Notification{
-		Temperature: temperature,
-		Humidity:    humidity,
-		Humidex:     humidex,
-		Sensation:   sensation,
+		Title:       title,
+		Description: msg,
 	}
 
 	// Convertir la notification en JSON
@@ -179,7 +179,8 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Envoyer le JSON
+	url1 := "tcp://10.133.33.52:1883"
 	topic1 := "notification"
-	SendMQTT(notificationJSON, topic1)
+	SendMQTT(notificationJSON, topic1, url1)
 
 }

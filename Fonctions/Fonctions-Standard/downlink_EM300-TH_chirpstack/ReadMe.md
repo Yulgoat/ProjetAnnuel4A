@@ -1,15 +1,23 @@
-This code is used to set the measurement interval for the Milesight EM300-TH sensor.
+**This code is used to set the measurement interval for the Milesight EM300-TH sensor.**
+
+## Principe
+
+- Prend dans un premiers temps les variables environnements déclarées dans le fichier .env
+
+- Va ensuite transformer la période (récupérée dans .env) dans un code hexadecimal correspondant au downlink du capteur EM300-TH (voir datasheet du capteur).
+
+- Envoie ensutie ce code hexadecimal sur l'api de chirpstack, et ainsi dès le prochain envoie de données du capteur on va changer son intervalle de mesure.
 
 
-Request : 
+## Request : 
 	pip install python-dotenv
 	pip install chirpstack-api
 
 
-Step 1 : 
+## Step 1 : 
 	Create a .env file and configure your environment variables
 
-Step 2 : 
+## Step 2 : 
 	Add your variables like this in the file
 		
 		# APi port of chirpstack
@@ -25,12 +33,12 @@ Step 2 :
 		PERIOD_SEC="180
 
 
-Step 3 : 
+## Step 3 : 
 	python3 main.py
 
 
 
-Note for other sensors : 
+## Note for other sensors : 
 	line 7 to 17 aand line 29 to end will not be changed
 	
 	line 19 to 26 are used to transform seconds into hexadecimal, then to invert the 2 payload bytes, and add them to ff03. This is taken from the Milesight Em300-TH sensor documentation.

@@ -20,15 +20,17 @@ type MeteoFranceResponse struct {
 	Humidite    float64 `json:"u"`
 }
 
+// Json que l'on envoie au topic notification
 type Notification struct {
-	Coherence string `json:"sensation"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 // Fonction pour envoyer un message MQTT à notification
 func SendMQTT(messageJSON []byte) {
 	// Envoyer le message JSON via MQTT
 	mqttOpts := mqtt.NewClientOptions()
-	mqttOpts.AddBroker("tcp://192.168.122.61:1883")
+	mqttOpts.AddBroker("tcp://10.133.33.52:1883")
 	mqttOpts.SetClientID("compareApiData")
 
 	// Création du client MQTT
@@ -149,8 +151,10 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Créer une structure de notification
+	title := "Cohérence données EM300-TH"
 	notification := Notification{
-		Coherence: coherence_valeur,
+		Title:       title,
+		Description: coherence_valeur,
 	}
 
 	// Convertir la notification en JSON

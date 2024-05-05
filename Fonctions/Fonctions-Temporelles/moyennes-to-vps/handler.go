@@ -206,7 +206,6 @@ func getMoyenneMilesghtEM500CO2() (float64, float64, error) {
 
 // Json que l'on envoie
 type Moyennes struct {
-	//Temperature float64 `json:"temperature"`
 	Moyenne_Temp     float64 `json:"Moyennes_Temp"`
 	Moyenne_Humi     float64 `json:"Moyennes_Humi"`
 	Moyenne_CO2      float64 `json:"Moyennes_CO2"`
