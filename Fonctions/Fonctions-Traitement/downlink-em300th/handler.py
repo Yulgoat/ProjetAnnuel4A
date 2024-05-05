@@ -15,10 +15,10 @@ def handle(req):
     mqtt_message = json.loads(req)
 
     # Récupérer la période du champ "période" du JSON
-    periode = mqtt_message.get("Periode")
+    periode = mqtt_message.get("periode")
 
     # Effectuer les opérations nécessaires sur la période (conversions, calculs, etc.)
-    hex_period = format(int(periode), 'x')
+    hex_period = format(periode, 'x')
     len_payload = math.ceil(len(hex_period) / 2)
     hex_period = int(periode).to_bytes(len_payload, byteorder='big')
     hex_period = hex_period.hex()[2:] + hex_period.hex()[:2]

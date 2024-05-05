@@ -370,10 +370,28 @@ Ensuite dans "Configure the function", il y aura juste la partit "annotations" d
 
 [Des exemple peuvent être trouvés ici.](https://gitlab.insa-rennes.fr/mycelium-3.0/mycelium-3.0)
 
-# Guide MQTT
-**Ce guide permet de créer un serveur MQTT et de trigger des fonctions openfaas lorsque qu'il y a un message sur un topic précis.**
+# Guide MQTT Connector
+**Ce guide permet de créer des MQTT Connector qui vont trigger des fonctions openfaas lorsque qu'il y a un message sur un topic précis.**
 
-## Création du serveur MQTT :
+## Installation du serveur MQTT Mosquitto
+
+Installer mosquitto :
+```sh
+sudo apt install mosquitto
+systemctl start mosquitto.service
+```
+
+Voir si le serveur MQTT est déployé :
+```sh
+systemctl status mosquitto
+```
+
+Commande à faire pour que cela fonctionne (ça rajoute deux lignes importantes dans un fichier) :
+```sh
+echo -e "allow_anonymous true\nlistener 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
+```
+
+## Création  & Utilisation de MQTT Connector 
 
 Se placer dans le dossier `faas-netes/chart` :
 ```sh
@@ -394,23 +412,24 @@ Appliquer les paramètres :
 helm template -n openfaas --namespace openfaas mqtt-connector/ | kubectl apply -f -
 ```
 
-Installer mosquitto :
+## Test Serveur MQTT
+Installer des clients pour tester :
 ```sh
-sudo apt install mosquitto
-systemctl start mosquitto.service
+sudo apt-get install mosquitto-clients
 ```
 
-Voir si le serveur MQTT est déployé :
+Faire le test du serveur MQTT :
 ```sh
-systemctl status mosquitto
+mosquitto_pub -h localhost -t <name-topic> -m "Hello World!"
 ```
 
-Commande à faire pour que cela fonctionne (ça rajoute deux lignes importantes dans un fichier) :
+
+Pour voir ce qu’on reçoit sur un topic :
 ```sh
-echo -e "allow_anonymous true\nlistener 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
+mosquitto_sub -h localhost -t <name-topic>
 ```
 
-## Test du serveur MQTT :
+## Test MQTT Connector :
 
 Pour tester, on peut créer une fonction Open Faas simple, affichant simplement "Hello" par exemple (voir tutoriel OpenFaas). Il faut ensuite modifier le fichier .yml de la fonction en rajoutant le topic.
 
@@ -429,26 +448,12 @@ functions:
       topic: <name-topic>
 ```
 
-Il faut ensuite déployer la fonction. On va publier sur le topic pour vérifier que la fonction se lance bien.
-
-Installer des clients pour tester :
-```sh
-sudo apt-get install mosquitto-clients
-```
-
-Faire le test du serveur MQTT :
-```sh
-mosquitto_pub -h localhost -t <name-topic> -m "Hello World!"
-```
+Il faut ensuite déployer la fonction. On va publier sur le topic (avec mosquitto_pub) pour vérifier que la fonction se lance bien.
 
 On peut ensuite regarder les logs des fonctions et du mqtt connector pour voir que cela fonctionne (pour cela, on peut utiliser les commandes de la partie openfaas ou bien les commandes de la partie k9s).
 
-Pour voir ce qu’on reçoit sur un topic :
-```sh
-mosquitto_sub -h localhost -t <name-topic>
-```
 
-## Méthode pour ajouter plusieurs topics :
+## Méthode pour ajouter plusieurs MQTT Connector (pour plusieurs topics) :
 
 Chaque topic nécessite la création d'un nouveau mqtt-connector. Pour cela, il faut créer un autre fichier values.yaml (et renommer le fichier). Ce fichier sera identique au fichier que l'on vient de créer, excepté le topic et le clientID qui doit être unique. Il faut se placer dans le dossier `faas-netes/chart`. 
 
