@@ -918,8 +918,8 @@ sudo iptables -t nat -D PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 300
 
 - Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
 
-- Lancer le server RSS : `docker run -p 80:80 rss-app` (si login docker pas celui de l'image, alors user/rss-app)
---> À relancer à chaque fois que le serveur redemmare (verifier avec `docker ps` si l'image tourne)
+- Lancer le server RSS : `docker run -p 8082:80 rss-app` (si login docker pas celui de l'image, alors user/rss-app)
+--> À relancer à chaque fois que le serveur redémarre (verifier avec `docker ps` si l'image tourne)
 
 - Pour des exemples de POST, voir mycelium-3.0/Exemples Fonction OU dans Fonctions-VPS/notification-to-rss
 --> Les fonctions POST prennent en entrée un JSON du type {"title":"XXX","description":"YYY"}
