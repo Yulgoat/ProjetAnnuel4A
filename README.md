@@ -930,6 +930,9 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 300
 sudo iptables -t nat -D PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 3000
 ```
 
+
+Pour accéder aux différentes interfaces web, il faut, une fois connecré au wifi de l'insa, accéder à 10.133.33.52:\<Port\>
+
 ## Server RSS
 
 - Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
@@ -954,12 +957,16 @@ sudo iptables -t nat -D PREROUTING -p tcp --dport 1883 -j REDIRECT --to-port 300
 
 - Organisation : MyceliumVPS
 
+- Port : 8086
+
 
 ## Grafana VPS
 
 - User : admin
 
 - Mdp : Mycelium
+
+- Port : 3000
 
 # Guide Git avec SSH
 
