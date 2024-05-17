@@ -1,6 +1,6 @@
 **Dossier qui contient ce que contietn l'image docker du flux RSS**
 
-- requierement.txt : les import python nécessaire 
+- requirements.txt : les import python nécessaire 
 
 - rss.py : fonction principale, c'est elle le serveur rss qui va tourner quand on lance l'image
 
