@@ -783,6 +783,21 @@ Et voilà, maintenant la connexion venant de la gateway est configurée et Chirp
 
 La méthode ci-dessus doit être refait à chaque lancement de VM (normalement le enp reste le même).
 
+
+# Données OSUR
+
+## Broker MQTT de l'OSUR
+IP : 129.20.47.26
+PortMQTT : 1883
+
+## Topic des données des capteurs
+topic : application/+/device/\<DevEUI\>/event/up
+
+Vous récuperez les JSON de données des capteurs.
+
+Le + permet de prendre tous les \<applicationID\> possible. Pour le MQTT connector ça permet de récupérer les messages. Mais pour le yml de la fonction openfaas, il faudra le remplacer par le topic exact. Pour cela regarder les logs de MQTT Connector.
+
+
 # Guide Cluster
 
 Pour pouvoir accéder au cluster : 
@@ -988,3 +1003,14 @@ kubectl port-forward -n openfaas svc/gateway 8080:8080 &
 sudo ip link set enp7s0 up  && sudo ip addr add 192.168.2.44/24 dev enp7s0 
 ```
 (moi c’était 7, mettez le votre (voir Configurer la connexion sur la VM))
+
+
+# Compte et MDP
+
+## Gmail
+User : myceliuminsarennes@gmail.com
+Mdp : NikosVolodiaMycelium
+
+## Docker
+User : myceliumir
+Mdp : MyceliumIR
