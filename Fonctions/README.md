@@ -21,3 +21,7 @@
 ## Fonctions-VPS 
 	- Fonctions Go
 	- Fonctions OpenFaas qui tourne sur le VPS
+
+
+## Serveur RSS
+	- Contenue de ce qu'il y a dans l'image docker myceliumir/rssmycelium
