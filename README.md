@@ -935,9 +935,9 @@ Pour accéder aux différentes interfaces web, il faut, une fois connecré au wi
 
 ## Server RSS
 
-- Pull le server RSS si il n’est pas présent : `docker pull thomasderrien/rss-app`
+- Pull le server RSS si il n’est pas présent : `docker pull myceliumir/rssmycelium`
 
-- Lancer le server RSS : `docker run -p 8082:80 rss-app` (si login docker pas celui de l'image, alors user/rss-app)
+- Lancer le server RSS : `docker run -p 8082:80 myceliumir/rssmycelium` (si login docker pas celui de l'image, alors user/rss-app)
 --> À relancer à chaque fois que le serveur redémarre (verifier avec `docker ps` si l'image tourne)
 
 - Pour des exemples de POST, voir mycelium-3.0/Exemples Fonction OU dans Fonctions-VPS/notification-to-rss
